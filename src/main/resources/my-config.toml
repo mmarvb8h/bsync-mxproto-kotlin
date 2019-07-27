@@ -1,0 +1,10 @@
+
+[plaid]
+    environment = 'sandbox'
+
+# configuration section.
+[config]
+    [config.plaid.sandbox]
+        clientId = '5c984c386338fe001522c99e'
+        secretKey = 'ce4bb82013cbdf3cabfb5fb48d237c'
+        publicKey = 'e041fb0aecd97d35e6d834ec770b3c'
