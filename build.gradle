@@ -22,8 +22,10 @@ plugins {
 }
 
 application {
+    // On Edit Configurations modal:
+    // The value of mainClassName also needs to be Main class.
+    // Set the, Use classpath of module: Bsync.main
     mainClassName = "bsync.MainKt"
-    // mainClassName = "io.ktor.server.netty.EngineMain.main"
 }
 
 group 'Bsync'
