@@ -22,7 +22,7 @@ class WhoAmI {
         val response = Json.stringify(
             WsResponse.serializer(),
             WsResponse(
-                sendTo = request?.respondTo ?: null,
+                sendTo = request?.respondTo,
                 message = WsResponseMessage(body = msgBodyJson)))
 
         clientSession.sendToClient(response)

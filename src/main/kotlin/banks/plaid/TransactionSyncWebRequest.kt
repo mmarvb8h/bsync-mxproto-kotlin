@@ -14,7 +14,7 @@ import java.text.SimpleDateFormat
 import java.util.Calendar
 
 
-object PlaidFromWebRequest : KoinComponent {
+object TransactionSyncWebRequest : KoinComponent {
 
     // Since the below will use a std Java library calling the plaid web server, i wrap
     // and launch an IO coroutine to do this.
@@ -31,29 +31,28 @@ object PlaidFromWebRequest : KoinComponent {
 
         val transaction: PlaidTransaction by inject {
             parametersOf(client, exchangeToken, clientSession) }
-        val dataReceiver: PlaidTransactionDbModel by inject {
+        val dataReceiver: PlaidTransactionToSchema by inject {
             parametersOf(clientSession) }
 
         // Setup date range. Set ending date.
-        val ft = SimpleDateFormat("yyyy-MM-dd")
-        val calender = Calendar.getInstance()
-        // Get date from JSON request.
-        val startDate = ft.parse(syncReq.accountSyncGroup.syncRange.startDate)
-        calender.time = startDate
-        // Increment from start date using num months.
-        calender.add(Calendar.MONTH, syncReq.accountSyncGroup.syncRange.numMonths)
+        val ft = SimpleDateFormat( "yyyy-MM-dd")
         // Setup list of accounts.
         var accountList = mutableListOf<String>()
         syncReq.accountSyncGroup.accounts.mapTo(accountList) { it.id }
 
-        val param = GetTransactionParams(
-            accountIds = accountList,
-            startDate = startDate,
-            endDate = calender.time
+        // Get pager to handle paging calls to Plaid.
+        val pager = GetTransactionPager(
+            accountIdList = accountList,
+            startDate = ft.parse(syncReq.accountSyncGroup.syncRange.startDate),
+            numMonths = syncReq.accountSyncGroup.syncRange.numMonths
         )
         // Call to get data from Plaid.
-        var transacData = transaction!!.getDataForAccount(param)
-        dataReceiver!!.acceptGetAccountTransactionData(data1 = transacData.body)
+        var currPage = pager.start()
+        while(pager.hasNextPage(currPage)) {
+            val transacData = transaction!!.getDataForAccount(currPage)
+            dataReceiver!!.saveTransactionGet(data1 = transacData.body)
+            currPage = pager.nextPage(currPage, transacData.body)
+        }
     }
 }
 

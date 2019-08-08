@@ -1,5 +1,6 @@
 package bsync
 
+import bsync.myconfig.CommandLine
 import bsync.myconfig.loadConfig
 import io.ktor.server.engine.*
 import io.ktor.server.netty.*
@@ -8,7 +9,10 @@ import org.slf4j.LoggerFactory
 
 fun main(args: Array<String>) {
     // Load our configuration from disk.
-    mainClass.loadAppConfig()
+    mainClass.apply {
+        loadAppConfig()
+        loadCommandLine(args)
+    }
 
     embeddedServer(Netty, commandLineEnvironment(args)).start()
 }
@@ -18,6 +22,12 @@ object mainClass {
 
     val logger = LoggerFactory.getLogger("mymain")
 
+    // Need to make any command line args available.
+    fun loadCommandLine(args: Array<String>) {
+        CommandLine(args)
+    }
+
+    // Load our configuration file from disk.
     fun loadAppConfig() {
 
         try {

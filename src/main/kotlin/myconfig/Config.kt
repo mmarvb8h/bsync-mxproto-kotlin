@@ -5,11 +5,11 @@ import org.apache.tuweni.toml.*
 
 object Config {
 
-    enum class KeyPaths (val path: String) {
-        PLAID_ENVIRONMENT("plaid.environment"),
-        PLAID_CLIENTID("plaid.$.clientId"),
-        PLAID_SECRETKEY("plaid.$.secretKey"),
-        PLAID_PUBKEY("plaid.$.publicKey")
+    enum class KeyPaths (val path: String, val envUsed: String) {
+        PLAID_ENVIRONMENT("plaid.environment", ""),
+        PLAID_CLIENTID("plaid.$.clientId", "plaid_environment"),
+        PLAID_SECRETKEY("plaid.$.secretKey", "plaid_environment"),
+        PLAID_PUBKEY("plaid.$.publicKey", "plaid_environment")
     }
 
     data class KeyVal (val value: String?, val path: String)
@@ -29,7 +29,7 @@ object Config {
 
     val configValue = fun (keypath: KeyPaths) : KeyVal {
         // Fill in environment piece of key path.
-        val fullKey = "config." + environmentPath(keypath.path)
+        val fullKey = "config." + environmentPath(keypath.path, keypath.envUsed)
         return KeyVal(value = getStrLower(fullKey), path = fullKey)
     }
 
@@ -38,10 +38,15 @@ object Config {
         return keyvalue.value ?: throw NoSuchFieldException("Configuration not found for path: ${keyvalue.path}")
     }
 
-    val environmentPath = fun(path: String?) : String {
+    val environmentPath = fun(path: String?, envUsed: String) : String {
         if (path == null) return ""
-        // Just return path with no setting of environment.
-        val env = getStrLower(KeyPaths.PLAID_ENVIRONMENT.path) ?: return path
+        // If no environment just return key path with no setting of environment.
+        val env = if (envUsed == "plaid_environment") {
+            getStrLower(KeyPaths.PLAID_ENVIRONMENT.path) ?: return path
+        }
+        else {
+            envUsed
+        }
         // Substitute environment portion of the path.
         return path.replace(".$.", ".${env}.")
     }
@@ -50,9 +55,3 @@ object Config {
 fun loadConfig(text: String) {
     Config(text)
 }
-
-
-//fun verify(keypath: KeyPaths, getter: (keypath: KeyPaths) -> String?) : String {
-//    val value = getter(keypath)
-//    return value ?: throw NoSuchFieldException("Configuration not found for path: ${keypath.path}")
-//}

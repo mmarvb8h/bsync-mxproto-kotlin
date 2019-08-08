@@ -53,7 +53,7 @@ class BsyncStart : KoinComponent {
                 linkToken = linkToken,
                 clientSession = clientSession) ?: return@launch
 
-            PlaidFromWebRequest.SyncAccountTransactions(
+            TransactionSyncWebRequest.SyncAccountTransactions(
                 exchangeToken = exchangeToken,
                 client = myplaidClient,
                 clientSession = clientSession,

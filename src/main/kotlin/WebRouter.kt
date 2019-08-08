@@ -22,6 +22,10 @@ class WebRouter(val app: Application) {
                     this.context.respondText(versionText(), ContentType.Text.Html)
                 }
 
+                get("/dbcreate") {
+                    this.context.respondText(versionText(), ContentType.Text.Html)
+                }
+
                 get("/") {
                     this.context.respondText("root path request received.")
                 }

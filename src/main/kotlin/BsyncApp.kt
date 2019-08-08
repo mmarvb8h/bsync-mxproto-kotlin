@@ -9,14 +9,33 @@ import org.koin.core.parameter.parametersOf
 import org.koin.ktor.ext.Koin
 import org.koin.ktor.ext.inject
 import java.time.Duration
+import bsync.db.postgres.Postgres
+import bsync.db.models.Schema
+import bsync.myconfig.CommandLine
 
+val x: Application.() -> Unit = {main()}
 
 // Entry point.
 fun Application.main() {
+    // Left this here so i know how to define a variable of a class type.
+    //val x: Application.() -> Unit = {main()}
 
+    // Do first part of initialization.
     TheApp.apply {
+        initLogging()
         loadInjectedComponents()
-        init()
+        initDb()
+    }
+
+    // Create schema on startup if requested.
+    if (CommandLine.contains("createdb")) {
+        // Generate schema.
+        Schema.create()
+    }
+
+    // Initialize remainder of web application.
+    TheApp.apply {
+        initWeb()
         defineRoutes()
     }
 }
@@ -24,9 +43,16 @@ fun Application.main() {
 
 object TheApp {
 
-    fun Application.init() {
-        install(DefaultHeaders)
+    fun Application.initLogging() {
         install(CallLogging)
+    }
+
+    fun Application.initDb() {
+        Postgres.getConnection()
+    }
+
+    fun Application.initWeb() {
+        install(DefaultHeaders)
         install(WebSockets) {
             pingPeriod = Duration.ofMinutes(1)
         }
@@ -44,14 +70,10 @@ object TheApp {
 
     fun Application.defineRoutes() {
         // Lazy inject my websocket routing object.
-        val webRouter: WebRouter by inject { parametersOf(this) }
+        val webRouter: WebRouter? by inject { parametersOf(this) }
 
         install(Routing) {
             webRouter!!.webRoutes(this)
         }
     }
 }
-
-
-
-

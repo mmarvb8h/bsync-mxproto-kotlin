@@ -20,6 +20,6 @@ val plaidModule = module {
                     PlaidTransaction(client = client,
                         exchangeToken = exchangeToken,
                         clientSession = clientSession) }
-    factory<PlaidTransactionDbModel> { (clientSession: WsClientSessionI) ->
-        PlaidTransactionDbModel(clientSession = clientSession) }
+    factory<PlaidTransactionToSchema> { (clientSession: WsClientSessionI) ->
+        PlaidTransactionToSchema(clientSession = clientSession) }
 }
