@@ -10,19 +10,19 @@ data class PlaidReqRange(
     val numMonths: Int)
 
 @Serializable
-data class BankSyncAccount(
+data class TransSyncAccount(
     val id: String,
     val name: String? = null,
     val subtype: String? = null)
 
 @Serializable
-data class BankSyncAccountGroup(
+data class TransSyncAccountGroup(
     val syncRange: PlaidReqRange,
-    val accounts: List<BankSyncAccount>)
+    val accounts: List<TransSyncAccount>)
 
 @Serializable
-data class BankSync(
+data class TransSync(
     val institutionId: String,
     val institutionName: String? = null,
     val linkToken: String,
-    val accountSyncGroup: BankSyncAccountGroup)
+    val accountSyncGroup: TransSyncAccountGroup)

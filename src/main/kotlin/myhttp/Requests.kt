@@ -6,7 +6,7 @@ import kotlinx.serialization.*
 @Serializable
 data class WsRequestMessage(
     val messageKind: String? = null,
-    val respondTo: String? = null,
+    val responseTo: String? = null,
     val body: String? = null)
 
 @Serializable

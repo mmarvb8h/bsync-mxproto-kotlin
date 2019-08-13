@@ -13,7 +13,7 @@ import org.joda.time.DateTime
 import java.text.SimpleDateFormat
 
 
-class PlaidTransactionToSchema(val clientSession: WsClientSessionI) {
+class PlaidTransToSchema(val clientSession: WsClientSessionI) {
 
     // Since the below will use a std Java library for DB access, i wrap
     // and launch an IO coroutine to do this.
@@ -30,7 +30,6 @@ class PlaidTransactionToSchema(val clientSession: WsClientSessionI) {
             transaction {
 
                 data1.accounts.forEach {
-                    val account = data1.accounts[0]
                     val existInTable =
                         Accounts.select {
                             exists(Accounts.select(Accounts.uid eq it.accountId))

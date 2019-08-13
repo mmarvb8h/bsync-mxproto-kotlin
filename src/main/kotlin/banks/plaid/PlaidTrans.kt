@@ -9,7 +9,7 @@ import com.plaid.client.response.TransactionsGetResponse
 import bsync.myhttp.WsClientSessionI
 
 
-class PlaidTransaction(val client: MyPlaidClientXtend,
+class PlaidTrans(val client: MyPlaidClientXtend,
                        val exchangeToken: MyItemPubTokenExchangeReq,
                        val clientSession: WsClientSessionI) : KoinComponent {
 

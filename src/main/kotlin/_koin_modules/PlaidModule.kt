@@ -10,16 +10,16 @@ import bsync.myhttp.WsClientSessionI
 val plaidModule = module {
 
     single<PlaidServiceI> { PlaidService() }
-    single<BsyncStart> { BsyncStart() }
+    single<TransSyncStart> { TransSyncStart() }
     single<PlaidClientFactory> { PlaidClientFactory() }
     single<AccessToken> { AccessToken() }
-    factory<PlaidTransaction> {
+    factory<PlaidTrans> {
                 (client: MyPlaidClientXtend,
                 exchangeToken: MyItemPubTokenExchangeReq,
                 clientSession: WsClientSessionI) ->
-                    PlaidTransaction(client = client,
+                    PlaidTrans(client = client,
                         exchangeToken = exchangeToken,
                         clientSession = clientSession) }
-    factory<PlaidTransactionToSchema> { (clientSession: WsClientSessionI) ->
-        PlaidTransactionToSchema(clientSession = clientSession) }
+    factory<PlaidTransToSchema> { (clientSession: WsClientSessionI) ->
+        PlaidTransToSchema(clientSession = clientSession) }
 }

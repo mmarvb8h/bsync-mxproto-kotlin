@@ -23,9 +23,9 @@ class PlaidService : KoinComponent, PlaidServiceI {
                 if (request.body == null) return
                 // Deserialize json formatted msg.
                 @UseExperimental(kotlinx.serialization.UnstableDefault::class)
-                val bankSyncReq = Json.parse(BankSync.serializer(), request.body)
+                val bankSyncReq = Json.parse(TransSync.serializer(), request.body)
 
-                val syncStartService: BsyncStart by inject ()
+                val syncStartService: TransSyncStart by inject ()
                 syncStartService.begin(clientSession = clientSession, syncReq = bankSyncReq)
             }
         }

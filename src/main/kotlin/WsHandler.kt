@@ -55,14 +55,14 @@ class WsHandler : KoinComponent {
 
             "who_am_i" -> {
                 val whoAmIHandler: WhoAmI by inject ()
-                whoAmIHandler!!.sendIdentity(
+                whoAmIHandler.sendIdentity(
                     clientSession = theSession, request = reqMessage.message)
             }
 
             "plaid" -> {
                 // Inject plaid manager.
                 val plaidService: PlaidServiceI by inject ()
-                plaidService!!.performTheService(
+                plaidService.performTheService(
                     clientSession = theSession, request = reqMessage.message)
             }
 

@@ -14,7 +14,7 @@ import java.text.SimpleDateFormat
 import java.util.Calendar
 
 
-object TransactionSyncWebRequest : KoinComponent {
+object TransSyncStoreIt : KoinComponent {
 
     // Since the below will use a std Java library calling the plaid web server, i wrap
     // and launch an IO coroutine to do this.
@@ -23,15 +23,15 @@ object TransactionSyncWebRequest : KoinComponent {
         client: MyPlaidClientXtend,
         exchangeToken: MyItemPubTokenExchangeReq,
         clientSession: WsClientSessionI,
-        syncReq: BankSync) : Unit {
+        syncReq: TransSync) : Unit {
 
         // Will always save to db.
 
         if (syncReq.accountSyncGroup.accounts.isNullOrEmpty()) return
 
-        val transaction: PlaidTransaction by inject {
+        val transaction: PlaidTrans by inject {
             parametersOf(client, exchangeToken, clientSession) }
-        val dataReceiver: PlaidTransactionToSchema by inject {
+        val dataReceiver: PlaidTransToSchema by inject {
             parametersOf(clientSession) }
 
         // Setup date range. Set ending date.
@@ -49,8 +49,8 @@ object TransactionSyncWebRequest : KoinComponent {
         // Call to get data from Plaid.
         var currPage = pager.start()
         while(pager.hasNextPage(currPage)) {
-            val transacData = transaction!!.getDataForAccount(currPage)
-            dataReceiver!!.saveTransactionGet(data1 = transacData.body)
+            val transacData = transaction.getDataForAccount(currPage)
+            dataReceiver.saveTransactionGet(data1 = transacData.body)
             currPage = pager.nextPage(currPage, transacData.body)
         }
     }

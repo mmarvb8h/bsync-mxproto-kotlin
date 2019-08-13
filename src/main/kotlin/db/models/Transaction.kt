@@ -5,7 +5,7 @@ import org.jetbrains.exposed.sql.Column
 
 
 object Transactions : IntIdTable(name = "Transactions") {
-    val uid = varchar("uid", 60)
+    val uid = varchar("uid", 60).uniqueIndex()
     val accountUid = varchar("account_uid", 60)
         .references(Accounts.uid)
     val date = date("posted_date")

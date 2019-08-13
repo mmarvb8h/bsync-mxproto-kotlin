@@ -15,9 +15,9 @@ import org.koin.core.inject
 import kotlin.coroutines.EmptyCoroutineContext
 
 
-class BsyncStart : KoinComponent {
+class TransSyncStart : KoinComponent {
 
-    suspend fun begin(clientSession: WsClientSessionI, syncReq: BankSync) {
+    suspend fun begin(clientSession: WsClientSessionI, syncReq: TransSync) {
 
         val clientId = Config.str()
         {
@@ -31,7 +31,7 @@ class BsyncStart : KoinComponent {
         {
             Config.configValue(Config.KeyPaths.PLAID_PUBKEY)
         }
-        val linkToken = syncReq.linkToken ?: ""
+        val linkToken = syncReq.linkToken
 
         clientSession.log.debug("call syncRoutine")
 
@@ -42,18 +42,18 @@ class BsyncStart : KoinComponent {
             clientSession.log.debug("in coroutine 1")
 
             val clientFactory: PlaidClientFactory by inject()
-            val myplaidClient = clientFactory!!.createWithXtendAccess(
+            val myplaidClient = clientFactory.createWithXtendAccess(
                 clientId = clientId,
                 secretKey = secretKey,
                 publicKey = pubKey)
 
             val plaidAccessTok: AccessToken by inject()
-            val exchangeToken = plaidAccessTok!!.getExchangeToken(
+            val exchangeToken = plaidAccessTok.getExchangeToken(
                 client = myplaidClient,
                 linkToken = linkToken,
                 clientSession = clientSession) ?: return@launch
 
-            TransactionSyncWebRequest.SyncAccountTransactions(
+            TransSyncStoreIt.SyncAccountTransactions(
                 exchangeToken = exchangeToken,
                 client = myplaidClient,
                 clientSession = clientSession,
