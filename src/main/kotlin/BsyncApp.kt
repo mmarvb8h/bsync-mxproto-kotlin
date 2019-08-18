@@ -12,6 +12,7 @@ import java.time.Duration
 import bsync.db.postgres.Postgres
 import bsync.db.models.Schema
 import bsync.myconfig.CommandLine
+import bsync.myhttp.ConnectorInspect
 
 val x: Application.() -> Unit = {main()}
 
@@ -53,6 +54,10 @@ object TheApp {
 
     fun Application.initWeb() {
         install(DefaultHeaders)
+        install(ConnectorInspect) {
+            webSocketPort = 5052
+            webAppPort = 5053
+        }
         install(WebSockets) {
             pingPeriod = Duration.ofMinutes(1)
         }

@@ -14,7 +14,24 @@ fun main(args: Array<String>) {
         loadCommandLine(args)
     }
 
-    embeddedServer(Netty, commandLineEnvironment(args)).start()
+    // Setup server connections.
+    val env = applicationEngineEnvironment {
+        module {
+            main()
+        }
+        // Websocket API
+        connector {
+            host = "0.0.0.0"
+            port = 5052
+        }
+        // Public API
+        connector {
+            host = "0.0.0.0"
+            port = 5053
+        }
+    }
+
+    embeddedServer(Netty, env).start()
 }
 
 
