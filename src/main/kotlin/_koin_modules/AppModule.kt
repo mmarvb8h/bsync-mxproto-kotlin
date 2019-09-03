@@ -13,7 +13,8 @@ import org.koin.dsl.module
 val appModule = module {
     // single<WebSocketHandler>()
     single<WebRouter> { (app: Application) -> WebRouter(app) }
-    single<WsHandler> { WsHandler() }
+    single<WsMessage> { WsMessage() }
     single<WhoAmI> { WhoAmI() }
+    single<ConnectionEndpoints> { ConnectionEndpoints() }
     //single<WebSocketHandler> { WebSocketHandler() }
 }

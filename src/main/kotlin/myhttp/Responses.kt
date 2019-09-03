@@ -17,5 +17,8 @@ data class WsResponse(
 
 @Serializable
 data class WhoAmIMessage(
-    val identification: String? = null)
+    val identification: String)
 
+@Serializable
+data class AccessIdMessage(
+    val accessId: Int)

@@ -9,8 +9,8 @@ object Schema {
     fun create() {
 
         transaction {
-            SchemaUtils.drop(Transactions, Accounts)
-            SchemaUtils.create(Transactions, Accounts)
+            SchemaUtils.drop(Transactions, Accounts, Access)
+            SchemaUtils.create(Transactions, Accounts, Access)
             // I can do other stuff
         }
     }

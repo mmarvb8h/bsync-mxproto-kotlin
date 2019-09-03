@@ -12,12 +12,17 @@ import bsync.myconfig.*
 import bsync.myhttp.*
 import org.koin.core.KoinComponent
 import org.koin.core.inject
+import org.koin.core.parameter.parametersOf
 import kotlin.coroutines.EmptyCoroutineContext
 
 
-class TransSyncStart : KoinComponent {
+class AccessWorker : KoinComponent {
 
-    suspend fun begin(clientSession: WsClientSessionI, syncReq: TransSync) {
+    suspend fun create(clientSession: WsClientSessionI,
+                       publicAccessKey: String,
+                       finsyncProfileId: Int,
+                       bankName: String?,
+                       bankUid: String?) {
 
         val clientId = Config.str()
         {
@@ -31,15 +36,12 @@ class TransSyncStart : KoinComponent {
         {
             Config.configValue(Config.KeyPaths.PLAID_PUBKEY)
         }
-        val linkToken = syncReq.linkToken
-
-        clientSession.log.debug("call syncRoutine")
 
         CoroutineScope(
-            context = Dispatchers.Default + CoroutineName(name = "beginBankSync")
+            context = Dispatchers.Default + CoroutineName(name = "Access Worker")
         ).launch {
 
-            clientSession.log.debug("in coroutine 1")
+            clientSession.log.debug("in Access Worker 1")
 
             val clientFactory: PlaidClientFactory by inject()
             val myplaidClient = clientFactory.createWithXtendAccess(
@@ -50,16 +52,16 @@ class TransSyncStart : KoinComponent {
             val plaidAccessTok: AccessToken by inject()
             val exchangeToken = plaidAccessTok.getExchangeTokenFromServer(
                 client = myplaidClient,
-                publicAccessKey = linkToken,
+                publicAccessKey = publicAccessKey,
                 clientSession = clientSession) ?: return@launch
 
-            TransSyncStoreIt.SyncAccountTransactions(
-                exchangeToken = exchangeToken,
-                client = myplaidClient,
-                clientSession = clientSession,
-                syncReq = syncReq)
+            // Persist token in DB.
+            val saveExchangeToDb: AccessDb by inject{
+                parametersOf(clientSession) }
+            saveExchangeToDb.saveExchangeToken(exchangeToken)
+            // Send back response
 
-            clientSession.log.debug("in coroutine end")
+            clientSession.log.debug("in Access Worker end")
         }
         clientSession.log.debug("call syncRoutine end")
     }

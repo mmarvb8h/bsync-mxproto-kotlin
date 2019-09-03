@@ -13,12 +13,22 @@ import java.text.SimpleDateFormat
 import bsync.myconfig.*
 
 
-class PlaidService : KoinComponent, PlaidServiceI {
+class PlaidWsInterface : KoinComponent {
 
-    override suspend fun access_create(clientSession: WsClientSessionI, publicKey: String) {
+    suspend fun callService(clientSession: WsClientSessionI, request: WsRequestMessage?) {
+        if (request == null) return
+        // Copy out of Ws (ie. websocket) format.
+        when (request.messageKind) {
+            "account_sync_start" -> {
+                if (request.body == null) return
+                // Deserialize json formatted msg.
+                @UseExperimental(kotlinx.serialization.UnstableDefault::class)
+                val bankSyncReq = Json.parse(TransSync.serializer(), request.body)
 
-        val worker: AccessWorker by inject ()
-
+                val syncStartService: TransSyncStart by inject ()
+                syncStartService.begin(clientSession = clientSession, syncReq = bankSyncReq)
+            }
+        }
     }
 }
 

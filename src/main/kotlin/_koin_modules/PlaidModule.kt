@@ -13,6 +13,9 @@ val plaidModule = module {
     single<TransSyncStart> { TransSyncStart() }
     single<PlaidClientFactory> { PlaidClientFactory() }
     single<AccessToken> { AccessToken() }
+    single<AccessWorker> { AccessWorker() }
+    single<AccessDb> { (clientSession: WsClientSessionI) ->
+        AccessDb(clientSession = clientSession) }
     factory<PlaidTrans> {
                 (client: MyPlaidClientXtend,
                 exchangeToken: MyItemPubTokenExchangeReq,

@@ -5,25 +5,30 @@ import io.ktor.http.*
 import io.ktor.response.*
 import io.ktor.routing.*
 import io.ktor.websocket.webSocket
+import org.koin.core.KoinComponent
+import org.koin.core.inject
 
 
-class WebRouter(val app: Application) {
+class WebRouter (val app: Application) : KoinComponent {
     val env = this.app.environment
 
     fun webRoutes(routing: Routing) {
+
         try {
             routing.apply {
 
                 webSocket("/ws") {
-                    WsMessage.handleMsg(wsSession = this)
+                    WsHandler.handleMsg(wsSession = this)
+                }
+
+                get("/connection/create") {
+                    val endpoint: ConnectionEndpoints by inject ()
+                    endpoint.create(pipeline = this)
                 }
 
                 get("/version") {
                     this.context.respondText(versionText(), ContentType.Text.Html)
-                }
-
-                get("/dbcreate") {
-                    this.context.respondText(versionText(), ContentType.Text.Html)
+                    //call.respondText(e.localizedMessage,ContentType.Text.Plain, HttpStatusCode.InternalServerError)
                 }
 
                 get("/") {
