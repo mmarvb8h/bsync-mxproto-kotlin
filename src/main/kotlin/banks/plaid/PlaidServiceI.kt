@@ -5,5 +5,5 @@ import bsync.myhttp.WsRequestMessage
 
 
 interface PlaidServiceI {
-    suspend fun performTheService(clientSession: WsClientSessionI, request: WsRequestMessage?)
+    suspend fun access_create(clientSession: WsClientSessionI, publicKey: String)
 }

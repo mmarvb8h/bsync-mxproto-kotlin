@@ -48,9 +48,9 @@ class TransSyncStart : KoinComponent {
                 publicKey = pubKey)
 
             val plaidAccessTok: AccessToken by inject()
-            val exchangeToken = plaidAccessTok.getExchangeToken(
+            val exchangeToken = plaidAccessTok.getExchangeTokenFromServer(
                 client = myplaidClient,
-                linkToken = linkToken,
+                publicAccessKey = linkToken,
                 clientSession = clientSession) ?: return@launch
 
             TransSyncStoreIt.SyncAccountTransactions(

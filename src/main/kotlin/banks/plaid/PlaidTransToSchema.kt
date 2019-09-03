@@ -67,14 +67,6 @@ class PlaidTransToSchema(val clientSession: WsClientSessionI) {
                 }
             } // End of transaction
 
-            // Save transaction data.
-
-            translate("")
         }
-
-
-    suspend fun translate(data: String) : Unit {
-
-    }
 
 }

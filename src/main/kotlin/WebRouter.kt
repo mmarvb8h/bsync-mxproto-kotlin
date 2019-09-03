@@ -5,9 +5,11 @@ import io.ktor.http.*
 import io.ktor.response.*
 import io.ktor.routing.*
 import io.ktor.websocket.webSocket
+import org.koin.core.KoinComponent
+import org.koin.core.inject
 
 
-class WebRouter (val app: Application) {
+class WebRouter (val app: Application) : KoinComponent {
     val env = this.app.environment
 
     fun webRoutes(routing: Routing) {
@@ -17,6 +19,11 @@ class WebRouter (val app: Application) {
 
                 webSocket("/ws") {
                     WsHandler.handleMsg(wsSession = this)
+                }
+
+                get("/connection/create") {
+                    val endpoint: ConnectionEndpoints by inject ()
+                    endpoint.create(pipeline = this)
                 }
 
                 get("/version") {

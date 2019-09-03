@@ -15,20 +15,10 @@ import bsync.myconfig.*
 
 class PlaidService : KoinComponent, PlaidServiceI {
 
-    override suspend fun performTheService(clientSession: WsClientSessionI, request: WsRequestMessage?) {
-        if (request == null) return
-        // Copy out of Ws (ie. websocket) format.
-        when (request.messageKind) {
-            "account_sync_start" -> {
-                if (request.body == null) return
-                // Deserialize json formatted msg.
-                @UseExperimental(kotlinx.serialization.UnstableDefault::class)
-                val bankSyncReq = Json.parse(TransSync.serializer(), request.body)
+    override suspend fun access_create(clientSession: WsClientSessionI, publicKey: String) {
 
-                val syncStartService: TransSyncStart by inject ()
-                syncStartService.begin(clientSession = clientSession, syncReq = bankSyncReq)
-            }
-        }
+        val worker: AccessWorker by inject ()
+
     }
 }
 

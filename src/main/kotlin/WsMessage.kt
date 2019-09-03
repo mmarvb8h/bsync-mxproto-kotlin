@@ -60,9 +60,7 @@ class WsMessage : KoinComponent {
             }
 
             "plaid" -> {
-                // Inject plaid manager.
-                val plaidService: PlaidServiceI by inject ()
-                plaidService.performTheService(
+                PlaidWsInterface().callService(
                     clientSession = theSession, request = reqMessage.message)
             }
 
