@@ -55,6 +55,7 @@ class AccessWorker : KoinComponent {
                 client = myplaidClient,
                 publicAccessKey = publicAccessKey,
                 clientSession = clientSession) ?: return@launch
+
             // Persist token in DB.
             val saveExchangeToDb: AccessDb by inject{
                 parametersOf(clientSession) }
