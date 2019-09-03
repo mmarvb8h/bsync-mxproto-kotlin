@@ -15,10 +15,18 @@ import bsync.myconfig.*
 
 class PlaidService : KoinComponent, PlaidServiceI {
 
-    override suspend fun access_create(clientSession: WsClientSessionI, publicKey: String) {
+    override suspend fun access_create(clientSession: WsClientSessionI,
+                                       publicAccessKey: String,
+                                       finsyncProfileId: Int,
+                                       bankName: String?,
+                                       bankUid: String?) {
 
         val worker: AccessWorker by inject ()
-
+        worker.create(clientSession,
+            publicAccessKey = publicAccessKey,
+            finsyncProfileId = finsyncProfileId,
+            bankName = bankName,
+            bankUid = bankUid)
     }
 }
 

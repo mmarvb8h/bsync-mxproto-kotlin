@@ -1,6 +1,5 @@
 package bsync.banks.plaid
 
-import kotlinx.serialization.*
 import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.*
 
@@ -13,9 +12,11 @@ import bsync.myhttp.*
 import org.koin.core.KoinComponent
 import org.koin.core.inject
 import org.koin.core.parameter.parametersOf
+
 import kotlin.coroutines.EmptyCoroutineContext
 
 
+@UseExperimental(kotlinx.serialization.ImplicitReflectionSerializer::class)
 class AccessWorker : KoinComponent {
 
     suspend fun create(clientSession: WsClientSessionI,
@@ -54,12 +55,16 @@ class AccessWorker : KoinComponent {
                 client = myplaidClient,
                 publicAccessKey = publicAccessKey,
                 clientSession = clientSession) ?: return@launch
-
             // Persist token in DB.
             val saveExchangeToDb: AccessDb by inject{
                 parametersOf(clientSession) }
             saveExchangeToDb.saveExchangeToken(exchangeToken)
+
             // Send back response
+            @UseExperimental(kotlinx.serialization.UnstableDefault::class)
+            val jsonResponse = Json.stringify(
+                AccessIdMessage.serializer(),
+                AccessIdMessage(accessId = 1))
 
             clientSession.log.debug("in Access Worker end")
         }
