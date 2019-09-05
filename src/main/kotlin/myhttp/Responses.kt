@@ -20,5 +20,7 @@ data class WhoAmIMessage(
     val identification: String)
 
 @Serializable
-data class AccessIdMessage(
-    val accessId: Int)
+data class CreateUserResponse(
+    val userGuid: String,
+    val connectWidgetUrl: String? = null,
+    val finsyncId: Int? = null)

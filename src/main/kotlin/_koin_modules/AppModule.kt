@@ -15,6 +15,6 @@ val appModule = module {
     single<WebRouter> { (app: Application) -> WebRouter(app) }
     single<WsMessage> { WsMessage() }
     single<WhoAmI> { WhoAmI() }
-    single<ConnectionEndpoints> { ConnectionEndpoints() }
+    single<MxuserEndpoints> { MxuserEndpoints() }
     //single<WebSocketHandler> { WebSocketHandler() }
 }

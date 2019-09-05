@@ -25,8 +25,8 @@ plugins {
 
 application {
     // On Edit Configurations modal:
-    // The value of mainClassName also needs to be Main class.
-    // Set the, Use classpath of module: Bsync.main
+    //     MainClass: bsync.MainKt
+    //     Use classpath of module: Bsync.main
     mainClassName = "bsync.MainKt"
 }
 
@@ -68,6 +68,11 @@ dependencies {
     // see: https://github.com/apache/incubator-tuweni and
     //      https://github.com/ConsenSys/cava
     implementation "org.apache.tuweni:tuweni-toml:$tuweni_toml_version"
+    implementation "io.netty:netty-tcnative:2.0.25.Final"
+    implementation "io.netty:netty-tcnative-boringssl-static:2.0.25.Final"
+    implementation "io.netty:netty-tcnative-boringssl-static:2.0.25.Final:osx-x86_64"
+    implementation fileTree(dir: 'libs/atrium-java-2.7.0', include: ['*.jar'])
+    implementation fileTree(dir: 'libs/atrium-java-2.7.0/lib', include: ['*.jar'])
     // testImplementation group: 'junit', name: 'junit', version: '4.12'
 }
 

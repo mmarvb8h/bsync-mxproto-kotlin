@@ -14,7 +14,9 @@ import bsync.db.models.Schema
 import bsync.myconfig.CommandLine
 import bsync.myhttp.ConnectorInspect
 
-val x: Application.() -> Unit = {main()}
+// Took me a long time to figure this out so i'm keeping it
+// just in case i need it one day.
+//val x: Application.() -> Unit = {main()}
 
 // Entry point.
 fun Application.main() {
@@ -69,7 +71,7 @@ object TheApp {
             SLF4JLogger(org.koin.core.logger.Level.INFO)
             modules(
                 appModule,
-                plaidModule)
+                mxModule)
         }
     }
 

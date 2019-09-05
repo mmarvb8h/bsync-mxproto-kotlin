@@ -29,6 +29,20 @@ fun main(args: Array<String>) {
             host = "0.0.0.0"
             port = 5053
         }
+        connector {
+            host = "0.0.0.0"
+            port = 8443
+        }
+//        sslConnector (
+//            keyStore = "",
+//            keyAlias = "",
+//            keyStorePassword = { "".toCharArray() },
+//            privateKeyPassword = { "".toCharArray() }
+//        ) {
+//            port = 8483
+//            host = "0.0.0.0"
+//            //keyStorePath = ""
+//        }
     }
 
     embeddedServer(Netty, env).start()

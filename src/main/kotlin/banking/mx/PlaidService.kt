@@ -1,4 +1,4 @@
-package bsync.banks.plaid
+package bsync.banking.mx
 
 import org.koin.core.KoinComponent
 import org.koin.core.inject
@@ -13,23 +13,14 @@ import java.text.SimpleDateFormat
 import bsync.myconfig.*
 
 
-class PlaidWsInterface : KoinComponent {
+class PlaidService : KoinComponent, PlaidServiceI {
 
-    suspend fun callService(clientSession: WsClientSessionI, request: WsRequestMessage?) {
-        if (request == null) return
-        // Copy out of Ws (ie. websocket) format.
-        when (request.messageKind) {
-            "account_sync_start" -> {
-                if (request.body == null) return
-                // Deserialize json formatted msg.
-                @UseExperimental(kotlinx.serialization.UnstableDefault::class)
-                val bankSyncReq = Json.parse(TransSync.serializer(), request.body)
-
-                val syncStartService: TransSyncStart by inject ()
-                syncStartService.begin(clientSession = clientSession, syncReq = bankSyncReq)
-            }
-        }
-    }
+//        val worker: AccessWorker by inject ()
+//        worker.create(clientSession,
+//            publicAccessKey = publicAccessKey,
+//            finsyncProfileId = finsyncProfileId,
+//            bankName = bankName,
+//            bankUid = bankUid
 }
 
 //    suspend fun AccountSync(bodyType: String?, requestBody: String?) {

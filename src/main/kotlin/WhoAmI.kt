@@ -8,7 +8,7 @@ import bsync.myhttp.*
 @UseExperimental(kotlinx.serialization.ImplicitReflectionSerializer::class)
 class WhoAmI {
 
-    suspend fun sendIdentity(clientSession: WsClientSessionI, request: WsRequestMessage?) {
+    suspend fun sendIdentity(clientSession: MyClientSessionI, request: WsRequestMessage?) {
 
         clientSession.log.debug("In WhoAmI handler")
 
@@ -25,6 +25,6 @@ class WhoAmI {
                 sendTo = request?.responseTo,
                 message = WsResponseMessage(body = msgBodyJson)))
 
-        clientSession.sendToClient(response)
+        clientSession.sendMessageToClient(response)
     }
 }

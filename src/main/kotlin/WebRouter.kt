@@ -21,9 +21,14 @@ class WebRouter (val app: Application) : KoinComponent {
                     WsHandler.handleMsg(wsSession = this)
                 }
 
-                get("/connection/create") {
-                    val endpoint: ConnectionEndpoints by inject ()
+                get("/mxuser/create") {
+                    val endpoint: MxuserEndpoints by inject ()
                     endpoint.create(pipeline = this)
+                }
+
+                get("/mxuser/createandconnect") {
+                    val endpoint: MxuserEndpoints by inject ()
+                    endpoint.createAndConnect(pipeline = this)
                 }
 
                 get("/version") {
